@@ -59,6 +59,7 @@ if (!localStorage.getItem(STORAGE_KEY)) {
 
 const form = document.getElementById("jogadoraForm");
 const buscaInput = document.getElementById("busca");
+const clubeSelect = document.getElementById("filtroClube");
 
 const nomeElement = document.getElementById("nome");
 const posicaoElement = document.getElementById("posicao");
@@ -76,6 +77,10 @@ function render() {
     lista.innerHTML = "";
 
     let busca = buscaInput.value.toLowerCase();
+
+    const clubes = [...new Set(jogadoras.map((jogadora) => jogadora.clube))];
+    clubeSelect.innerHTML = '<option value="">Todos os clubes</option>';
+    clubes.forEach((clube) => (clubeSelect.innerHTML += `<option value="${clube}">${clube}</option>`));
     
     let jogadorasFiltradas = jogadoras.filter((jogadora) => jogadora.nome.toLowerCase().includes(busca) || jogadora.posicao.toLowerCase().includes(busca));
 
