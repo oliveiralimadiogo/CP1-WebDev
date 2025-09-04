@@ -1,4 +1,25 @@
-* {
-    margin: 0;
-    padding: 0;
+.card-jogadora {
+  position: relative;
+  border: none;
+  transition: transform 0.2s;
+}
+
+.card-jogadora:hover {
+  transform: translateY(-5px);
+}
+
+.card-jogadora img {
+  height: 180px;
+  object-fit: cover;
+  border-radius: 0.5rem;
+}
+
+.favorito {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 24px;
+  cursor: pointer;
+  color: gold;
+  text-shadow: 0 0 2px #000;
 }
