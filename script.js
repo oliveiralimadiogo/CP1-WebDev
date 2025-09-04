@@ -113,6 +113,14 @@ function toggleFavorito(index) {
     salvar();
 }
 
+function remover(index) {
+    if (confirm(`Tem certeza que deseja remover a jogadora: ${jogadoras[index].nome}?`)) {
+        jogadoras.splice(index, 1);
+        alert("Jogadora removida com sucesso!");
+        salvar();
+    }
+}
+
 form.addEventListener("submit", (e) => {
     e.preventDefault();
     const nome = nomeElement.value.trim();
