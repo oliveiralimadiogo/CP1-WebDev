@@ -2,6 +2,7 @@ const STORAGE_KEY = "jogadoras";
 
 const jogadorasIniciais = [
     {
+        id: 1,
         nome: "Andressa Alves",
         posicao: "Meio-campo",
         clube: "Corinthians",
@@ -12,6 +13,7 @@ const jogadorasIniciais = [
         favorita: false,
     },
     {
+        id: 2,
         nome: "Dayana Rodríguez",
         posicao: "Meio-campo",
         clube: "Corinthians",
@@ -22,6 +24,7 @@ const jogadorasIniciais = [
         favorita: false,
     },
     {
+        id: 3,
         nome: "Mariza",
         posicao: "Zagueira",
         clube: "Corinthians",
@@ -32,6 +35,7 @@ const jogadorasIniciais = [
         favorita: false,
     },
     {
+        id: 4,
         nome: "Thaís Regina",
         posicao: "Zagueira",
         clube: "Corinthians",
@@ -42,6 +46,7 @@ const jogadorasIniciais = [
         favorita: false,
     },
     {
+        id: 5,
         nome: "Letícia Teles",
         posicao: "Zagueira",
         clube: "Corinthians",
@@ -68,7 +73,7 @@ const golsElement = document.getElementById("gols");
 const assistenciasElement = document.getElementById("assistencias");
 const jogosElement = document.getElementById("jogos");
 const fotoElement = document.getElementById("foto");
-const editIndexElement = document.getElementById("editIndex");
+const editIdElement = document.getElementById("editId");
 
 let jogadoras = JSON.parse(localStorage.getItem(STORAGE_KEY));
 
@@ -90,14 +95,14 @@ function render() {
         && (filtroClube === "" || jogadora.clube === filtroClube)
     );
 
-    jogadorasFiltradas.forEach((jogadora, index) => {
+    jogadorasFiltradas.forEach(jogadora => {
         const column = document.createElement("div");
         column.className = "col-md-4 col-lg-3";
 
         column.innerHTML = `
             <div class="card card-jogadora shadow-sm">
                 <img src="${jogadora.foto}" class="card-img-top" alt="${jogadora.nome}">
-                <span class="favorito" onclick="toggleFavorito(${index})">
+                <span class="favorito" onclick="toggleFavorito(${jogadora.id})">
                     ${jogadora.favorita ? "⭐" : "☆"}       
                 </span>
                 <div class="card-body">
@@ -110,8 +115,8 @@ function render() {
                         <b>Jogos:</b> ${jogadora.jogos}<br>
                     </p>
                     <div class="d-flex justify-content-between">
-                        <button class="btn btn-sm btn-warning" onclick="editar(${index})">Editar</button>
-                        <button class="btn btn-sm btn-danger" onclick="remover(${index})">Excluir</button>
+                        <button class="btn btn-sm btn-warning" onclick="editar(${jogadora.id})">Editar</button>
+                        <button class="btn btn-sm btn-danger" onclick="remover(${jogadora.id})">Excluir</button>
                     </div>
                 </div>
             </div>
@@ -125,17 +130,19 @@ function salvar() {
     render();
 }
 
-function toggleFavorito(index) {
-    jogadoras[index].favorita = !jogadoras[index].favorita;
+function toggleFavorito(id) {
+    let jogadora = jogadoras.find(jogadora => jogadora.id == id);
+    jogadora.favorita = !jogadora.favorita;
     salvar();
 }
 
-function editar(index) {
+function editar(id) {
     window.scrollTo({top: 0, behavior: "smooth"});
 
-    const jogadora = jogadoras[index];
+    const jogadora = jogadoras.find(jogadora => jogadora.id == id);
 
-    editIndexElement.value = index;
+    editIdElement.value = jogadora.id;
+    console.log(editIdElement.value);
     nomeElement.value = jogadora.nome;
     posicaoElement.value = jogadora.posicao;
     clubeElement.value = jogadora.clube;
@@ -145,9 +152,11 @@ function editar(index) {
     fotoElement.value = jogadora.foto;
 }
 
-function remover(index) {
-    if (confirm(`Tem certeza que deseja remover a jogadora: ${jogadoras[index].nome}?`)) {
-        jogadoras.splice(index, 1);
+function remover(id) {
+    let indexJogadora = jogadoras.findIndex(jogadora => jogadora.id == id);
+    let jogadora = jogadoras.find(jogadora => jogadora.id == id);
+    if (confirm(`Tem certeza que deseja remover a jogadora: ${jogadora.nome}?`)) {
+        jogadoras.splice(indexJogadora, 1);
         alert("Jogadora removida com sucesso!");
         salvar();
     }
@@ -167,7 +176,7 @@ form.addEventListener("submit", (e) => {
     const assistencias = Number(assistenciasElement.value);
     const jogos = Number(jogosElement.value);
     const foto = fotoElement.value.trim();
-    const editIndex = editIndexElement.value;
+    const id = editIdElement.value;
 
     if (!nome || !posicao || !clube || !foto) {
         alert("Todos os campos são obrigatórios!");
@@ -175,6 +184,7 @@ form.addEventListener("submit", (e) => {
     }
 
     const novaJogadora = {
+        id,
         nome,
         posicao,
         clube,
@@ -185,20 +195,25 @@ form.addEventListener("submit", (e) => {
         favorita: false,
     };
 
-    if (editIndex) {
-        jogadoras[editIndex] = {
+    if (id) {
+        let indexJogadora = jogadoras.findIndex(jogadora => jogadora.id == id);
+        let jogadora = jogadoras.find(jogadora => jogadora.id == id);
+        jogadora = {
             ...novaJogadora,
-            favorita: jogadoras[editIndex].favorita
+            favorita: jogadora.favorita
         }
+        jogadoras[indexJogadora] = jogadora;
         alert("Jogadora editada com sucesso!");
     }
     else {
+        let ultimaJogadora = jogadoras[jogadoras.length - 1];
+        novaJogadora.id = (ultimaJogadora.id + 1)
         jogadoras.push(novaJogadora);
         alert("Jogadora adicionada com sucesso!");
     }
 
     form.reset();
-    editIndexElement.value = "";
+    editIdElement.value = "";
     salvar();
 });
 buscaInput.addEventListener("input", render);
