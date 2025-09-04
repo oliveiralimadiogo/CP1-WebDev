@@ -58,6 +58,7 @@ if (!localStorage.getItem(STORAGE_KEY)) {
 }
 
 const form = document.getElementById("jogadoraForm");
+const buscaInput = document.getElementById("busca");
 
 const nomeElement = document.getElementById("nome");
 const posicaoElement = document.getElementById("posicao");
@@ -74,7 +75,11 @@ function render() {
     const lista = document.getElementById("listaJogadoras");
     lista.innerHTML = "";
 
-    jogadoras.forEach((jogadora, index) => {
+    let busca = buscaInput.value.toLowerCase();
+    
+    let jogadorasFiltradas = jogadoras.filter((jogadora) => jogadora.nome.toLowerCase().includes(busca) || jogadora.posicao.toLowerCase().includes(busca));
+
+    jogadorasFiltradas.forEach((jogadora, index) => {
         const column = document.createElement("div");
         column.className = "col-md-4 col-lg-3";
 
@@ -180,5 +185,6 @@ form.addEventListener("submit", (e) => {
     editIndexElement.value = "";
     salvar();
 });
+buscaInput.addEventListener("input", render);
 
 render();
