@@ -66,6 +66,7 @@ const golsElement = document.getElementById("gols");
 const assistenciasElement = document.getElementById("assistencias");
 const jogosElement = document.getElementById("jogos");
 const fotoElement = document.getElementById("foto");
+const editIndexElement = document.getElementById("editIndex");
 
 let jogadoras = JSON.parse(localStorage.getItem(STORAGE_KEY));
 
@@ -113,6 +114,21 @@ function toggleFavorito(index) {
     salvar();
 }
 
+function editar(index) {
+    window.scrollTo({top: 0, behavior: "smooth"});
+
+    const jogadora = jogadoras[index];
+
+    editIndexElement.value = index;
+    nomeElement.value = jogadora.nome;
+    posicaoElement.value = jogadora.posicao;
+    clubeElement.value = jogadora.clube;
+    golsElement.value = jogadora.gols;
+    assistenciasElement.value = jogadora.assistencias;
+    jogosElement.value = jogadora.jogos;
+    fotoElement.value = jogadora.foto;
+}
+
 function remover(index) {
     if (confirm(`Tem certeza que deseja remover a jogadora: ${jogadoras[index].nome}?`)) {
         jogadoras.splice(index, 1);
@@ -130,6 +146,7 @@ form.addEventListener("submit", (e) => {
     const assistencias = Number(assistenciasElement.value);
     const jogos = Number(jogosElement.value);
     const foto = fotoElement.value.trim();
+    const editIndex = editIndexElement.value;
 
     if (!nome || !posicao || !clube || !foto) {
         alert("Todos os campos são obrigatórios!");
@@ -147,10 +164,20 @@ form.addEventListener("submit", (e) => {
         favorita: false,
     };
 
-    jogadoras.push(novaJogadora);
-    alert("Jogadora adicionada com sucesso!");
+    if (editIndex) {
+        jogadoras[editIndex] = {
+            ...novaJogadora,
+            favorita: jogadoras[editIndex].favorita
+        }
+        alert("Jogadora editada com sucesso!");
+    }
+    else {
+        jogadoras.push(novaJogadora);
+        alert("Jogadora adicionada com sucesso!");
+    }
 
     form.reset();
+    editIndexElement.value = "";
     salvar();
 });
 
