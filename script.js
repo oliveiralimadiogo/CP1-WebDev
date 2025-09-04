@@ -56,3 +56,41 @@ const jogadorasIniciais = [
 if (!localStorage.getItem(STORAGE_KEY)) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(jogadorasIniciais));
 }
+
+const form = document.getElementById("jogadoraForm");
+
+let jogadoras = JSON.parse(localStorage.getItem(STORAGE_KEY));
+
+function render() {
+    const lista = document.getElementById("listaJogadoras");
+    lista.innerHTML = "";
+
+    jogadoras.forEach((jogadora, index) => {
+        const column = document.createElement("div");
+        column.className = "col-md-4 col-lg-3";
+
+        column.innerHTML = `
+            <div class="card card-jogadora shadow-sm">
+                <img src="${jogadora.foto}" class="card-img-top" alt="${jogadora.nome}">
+                <span class="favorito" onclick="toggleFavorito(${index})">
+                    ${jogadora.favorita ? "⭐" : "☆"}       
+                </span>
+                <div class="card-body">
+                    <h5 class="card-title">${jogadora.nome}</h5>
+                    <p class="card-text">
+                        <b>Posição:</b> ${jogadora.posicao}<br>
+                        <b>Clube:</b> ${jogadora.clube}<br>
+                        <b>Gols:</b> ${jogadora.gols} | <b>Assistências:</b> ${jogadora.assistencias} | <b>Jogos:</b> ${jogadora.jogos}
+                    </p>
+                    <div class="d-flex justify-content-between">
+                        <button class="btn btn-sm btn-warning" onclick="editar(${index})">Editar</button>
+                        <button class="btn btn-sm btn-danger" onclick="remover(${index})">Excluir</button>
+                    </div>
+                </div>
+            </div>
+        `;
+        lista.appendChild(column);
+    });
+}
+
+render();
