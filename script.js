@@ -153,6 +153,11 @@ function remover(index) {
     }
 }
 
+function ordenarPor(campo) {
+    jogadoras.sort((a, b) => a[campo].localeCompare(b[campo]));
+    salvar();
+}
+
 form.addEventListener("submit", (e) => {
     e.preventDefault();
     const nome = nomeElement.value.trim();
