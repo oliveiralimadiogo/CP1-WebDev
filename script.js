@@ -77,12 +77,18 @@ function render() {
     lista.innerHTML = "";
 
     let busca = buscaInput.value.toLowerCase();
+    let filtroClube = clubeSelect.value;
 
     const clubes = [...new Set(jogadoras.map((jogadora) => jogadora.clube))];
     clubeSelect.innerHTML = '<option value="">Todos os clubes</option>';
     clubes.forEach((clube) => (clubeSelect.innerHTML += `<option value="${clube}">${clube}</option>`));
+
+    clubeSelect.value = filtroClube;
     
-    let jogadorasFiltradas = jogadoras.filter((jogadora) => jogadora.nome.toLowerCase().includes(busca) || jogadora.posicao.toLowerCase().includes(busca));
+    let jogadorasFiltradas = jogadoras.filter((jogadora) => 
+        (jogadora.nome.toLowerCase().includes(busca) || jogadora.posicao.toLowerCase().includes(busca))
+        && (filtroClube === "" || jogadora.clube === filtroClube)
+    );
 
     jogadorasFiltradas.forEach((jogadora, index) => {
         const column = document.createElement("div");
@@ -191,5 +197,6 @@ form.addEventListener("submit", (e) => {
     salvar();
 });
 buscaInput.addEventListener("input", render);
+clubeSelect.addEventListener("change", render);
 
 render();
