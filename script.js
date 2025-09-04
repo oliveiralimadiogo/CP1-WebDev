@@ -59,6 +59,14 @@ if (!localStorage.getItem(STORAGE_KEY)) {
 
 const form = document.getElementById("jogadoraForm");
 
+const nomeElement = document.getElementById("nome");
+const posicaoElement = document.getElementById("posicao");
+const clubeElement = document.getElementById("clube");
+const golsElement = document.getElementById("gols");
+const assistenciasElement = document.getElementById("assistencias");
+const jogosElement = document.getElementById("jogos");
+const fotoElement = document.getElementById("foto");
+
 let jogadoras = JSON.parse(localStorage.getItem(STORAGE_KEY));
 
 function render() {
@@ -80,7 +88,9 @@ function render() {
                     <p class="card-text">
                         <b>Posição:</b> ${jogadora.posicao}<br>
                         <b>Clube:</b> ${jogadora.clube}<br>
-                        <b>Gols:</b> ${jogadora.gols} | <b>Assistências:</b> ${jogadora.assistencias} | <b>Jogos:</b> ${jogadora.jogos}
+                        <b>Gols:</b> ${jogadora.gols}<br>
+                        <b>Assistências:</b> ${jogadora.assistencias}<br>
+                        <b>Jogos:</b> ${jogadora.jogos}<br>
                     </p>
                     <div class="d-flex justify-content-between">
                         <button class="btn btn-sm btn-warning" onclick="editar(${index})">Editar</button>
@@ -92,5 +102,43 @@ function render() {
         lista.appendChild(column);
     });
 }
+
+function salvar() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(jogadoras));
+    render();
+}
+
+form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const nome = nomeElement.value.trim();
+    const posicao = posicaoElement.value.trim();
+    const clube = clubeElement.value.trim();
+    const gols = Number(golsElement.value);
+    const assistencias = Number(assistenciasElement.value);
+    const jogos = Number(jogosElement.value);
+    const foto = fotoElement.value.trim();
+
+    if (!nome || !posicao || !clube || !foto) {
+        alert("Todos os campos são obrigatórios!");
+        return;
+    }
+
+    const novaJogadora = {
+        nome,
+        posicao,
+        clube,
+        gols,
+        assistencias,
+        jogos,
+        foto,
+        favorita: false,
+    };
+
+    jogadoras.push(novaJogadora);
+    alert("Jogadora adicionada com sucesso!");
+
+    form.reset();
+    salvar();
+});
 
 render();
