@@ -108,6 +108,11 @@ function salvar() {
     render();
 }
 
+function toggleFavorito(index) {
+    jogadoras[index].favorita = !jogadoras[index].favorita;
+    salvar();
+}
+
 form.addEventListener("submit", (e) => {
     e.preventDefault();
     const nome = nomeElement.value.trim();
